@@ -90,6 +90,30 @@ func visit(expr ast.Expr, args map[string]interface{}) Visitor {
 					panic("args len overflow for call cap")
 				}
 				return callInnerCap(visit(callExpr.Args[0], args)(args))
+			case "uint32":
+				return callTypeConvertNumber[uint32](visit(callExpr.Args[0], args)(args))
+			case "uint64":
+				return callTypeConvertNumber[uint64](visit(callExpr.Args[0], args)(args))
+			case "uint16":
+				return callTypeConvertNumber[uint16](visit(callExpr.Args[0], args)(args))
+			case "uint8":
+				return callTypeConvertNumber[uint8](visit(callExpr.Args[0], args)(args))
+			case "uint":
+				return callTypeConvertNumber[uint](visit(callExpr.Args[0], args)(args))
+			case "int":
+				return callTypeConvertNumber[int](visit(callExpr.Args[0], args)(args))
+			case "int8":
+				return callTypeConvertNumber[int8](visit(callExpr.Args[0], args)(args))
+			case "int16":
+				return callTypeConvertNumber[int16](visit(callExpr.Args[0], args)(args))
+			case "int32":
+				return callTypeConvertNumber[int32](visit(callExpr.Args[0], args)(args))
+			case "int64":
+				return callTypeConvertNumber[int64](visit(callExpr.Args[0], args)(args))
+			case "float32":
+				return callTypeConvertNumber[float32](visit(callExpr.Args[0], args)(args))
+			case "float64":
+				return callTypeConvertNumber[float64](visit(callExpr.Args[0], args)(args))
 			default:
 				panic(fmt.Sprintf("no support func name : %s", funcName))
 			}
@@ -116,7 +140,11 @@ func visit(expr ast.Expr, args map[string]interface{}) Visitor {
 	case *ast.Ident:
 		ident := expr.(*ast.Ident)
 		return func(args map[string]interface{}) interface{} {
-			return ident.Obj.Data
+			if _, ok := args[ident.Name]; ok {
+				return args[ident.Name]
+			} else {
+				return ident.Obj.Data
+			}
 		}
 	case *ast.BasicLit:
 		bl := expr.(*ast.BasicLit)

@@ -50,6 +50,16 @@ func TestGoRule(t *testing.T) {
 		}
 		t.Log(ok)
 	})
+	t.Run("TypeConvert", func(t *testing.T) {
+		ok, err := ExecuteSimpleBoolExpr("uint64(2) == uint64(a0)", Argument{
+			Name: "a0",
+			Val:  2.33,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Log(ok)
+	})
 }
 
 func BenchmarkGoRule(b *testing.B) {
